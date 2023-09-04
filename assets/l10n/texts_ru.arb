@@ -1,0 +1,9 @@
+{
+    "btnShutter_Tooltip": "Сфотографировать",
+    "txtProcessingImage": "Обработка изображения...",
+    "noteTextField_HintText": "Комментарий к фото",
+    "btnSend_Label": "Отправить",
+    "btnCancel_Label": "Отменить",
+    "txtSending": "Отправка...",
+    "txtCameraPermissionDenied": "Использование камеры запрещено"
+}

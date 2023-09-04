@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <bx:grid x="0" y="0" width="200" height="200"/>
+  </defs>
+  <rect width="200" height="200" style="stroke: rgb(0, 0, 0); fill: rgb(8, 20, 241);"/>
+  <ellipse style="paint-order: fill; stroke: rgb(51, 6, 250); fill: rgb(241, 233, 9);" cx="100" cy="100" rx="100" ry="100"/>
+  <path d="M 100 0 L 200 200 L 0 200 L 100 0 Z" style="stroke: rgb(0, 0, 0); fill: rgb(238, 8, 8);" bx:shape="triangle 0 0 200 200 0.5 0 1@a07d81fd"/>
+</svg>

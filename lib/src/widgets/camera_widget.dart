@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_texts.dart';
 import 'package:logging/logging.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,13 +12,16 @@ import '../blocs/reporter_events.dart';
 import '../blocs/reporter_states.dart';
 
 class CameraWidget extends StatefulWidget {
-  const CameraWidget({super.key});
+  const CameraWidget({super.key, required this.bloc});
+
+  final ReporterBloc bloc;
 
   @override
-  CameraWidgetState createState() => CameraWidgetState();
+  State<CameraWidget> createState() => _CameraWidgetState();
 }
 
-class CameraWidgetState extends State<CameraWidget> {
+class _CameraWidgetState extends State<CameraWidget>
+    with WidgetsBindingObserver {
   final logger = Logger('CameraWidget');
 
   late final CameraDescription _camera;
@@ -28,6 +30,7 @@ class CameraWidgetState extends State<CameraWidget> {
   bool isCameraPermissionGranted = false;
 
   Future<void> _initController() async {
+    logger.info('_initController() start');
     await Permission.camera.request();
     var status = await Permission.camera.status;
     if (!status.isGranted) {
@@ -42,8 +45,29 @@ class CameraWidgetState extends State<CameraWidget> {
     _controller = CameraController(
       _camera,
       ResolutionPreset.max,
+      imageFormatGroup: ImageFormatGroup.jpeg,
     );
-    await _controller.initialize();
+    try {
+      await _controller.initialize();
+    } on CameraException catch (e) {
+      logger.shout('_initController: $e');
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    logger.info('didChangeAppLifecycleState start: state: $state');
+    if (!_controller.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive) {
+      _controller.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      _initController();
+    }
+
+    super.didChangeAppLifecycleState(state);
   }
 
   @override
@@ -65,50 +89,43 @@ class CameraWidgetState extends State<CameraWidget> {
     logger.info('build start');
     final screenOrientation = MediaQuery.of(context).orientation;
     logger.info('screenOrientation: $screenOrientation');
-    final reporterBloc = BlocProvider.of<ReporterBloc>(context);
+    final reporterBloc = widget.bloc;
+    final state = reporterBloc.state as ReporterCameraState;
 
     return FutureBuilder<void>(
       future: _controllerInitialized,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return BlocBuilder<ReporterBloc, ReporterState>(
-            builder: (context, state) {
-              logger.info(state);
-              logger.info(state.toString());
+          logger.info(state);
 
-              return Stack(
-                children: [
-                  Container(
-                    color: Colors.black,
-                    child: screenOrientation == Orientation.portrait
-                        ? Column(
-                            children:
-                                createViewfinder(reporterBloc: reporterBloc),
-                          )
-                        : Row(
-                            children:
-                                createViewfinder(reporterBloc: reporterBloc),
-                          ),
-                  ),
-                  Visibility(
-                    visible: (state as ReporterCameraState)
-                        .imageProcessingInProgress,
-                    child: Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      color: Colors.black54,
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.of(context)?.txtProcessingImage ??
-                              'Processing image...',
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
+          return Stack(
+            children: [
+              Container(
+                color: Colors.black,
+                child: screenOrientation == Orientation.portrait
+                    ? Column(
+                        children: createViewfinder(reporterBloc: reporterBloc),
+                      )
+                    : Row(
+                        children: createViewfinder(reporterBloc: reporterBloc),
                       ),
+              ),
+              Visibility(
+                visible: state.imageProcessingInProgress,
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.black54,
+                  child: Center(
+                    child: Text(
+                      AppLocalizations.of(context)?.txtProcessingImage ??
+                          'Processing image...',
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ),
-                ],
-              );
-            },
+                ),
+              ),
+            ],
           );
         } else {
           return const Center(
@@ -164,14 +181,13 @@ class CameraWidgetState extends State<CameraWidget> {
 
       final imageFile = await _controller.takePicture();
       logger.info('imageFile.path = ${imageFile.path}');
-
       final imageBytes = await File(imageFile.path).readAsBytes();
+      await File(imageFile.path).delete();
+
       final reportPhoto = Photo(fileName: imageFile.name, bytes: imageBytes);
       bloc.add(PhotoPrepared(reportPhoto: reportPhoto));
-
-      await File(imageFile.path).delete();
     } catch (e) {
-      logger.shout(e);
+      logger.shout('_processImage: $e');
     }
   }
 }

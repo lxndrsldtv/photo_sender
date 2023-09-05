@@ -4,6 +4,6 @@
     "noteTextField_HintText": "Комментарий к фото",
     "btnSend_Label": "Отправить",
     "btnCancel_Label": "Отменить",
-    "txtSending": "Отправка...",
+    "txtSending": "Отправка фото...",
     "txtCameraPermissionDenied": "Использование камеры запрещено"
 }

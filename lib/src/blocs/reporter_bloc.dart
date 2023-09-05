@@ -1,17 +1,21 @@
 import 'package:domain/domain.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:location/location.dart';
 import 'package:logging/logging.dart';
 
 import './reporter_events.dart';
 import './reporter_states.dart';
 import '../remote_api.dart';
+import '../services/location_service.dart';
 
 class ReporterBloc extends Bloc<ReporterEvent, ReporterState> {
   final logger = Logger('ReporterBloc');
-  final _location = Location();
 
-  ReporterBloc() : super(ReporterCameraState()) {
+  // final _location = Location();
+  final LocationService _location;
+
+  ReporterBloc({required location})
+      : _location = location,
+        super(ReporterCameraState()) {
     on<ImageProcessingInProgress>(_onImageProcessingInProgress);
     on<PhotoPrepared>(_onPhotoPrepared);
     on<ReportCommentTextChanged>(_onReportCommentTextChanged);
@@ -39,14 +43,9 @@ class ReporterBloc extends Bloc<ReporterEvent, ReporterState> {
         '<_onPhotoPrepared> event.reportPhoto.bytes.length ${event.reportPhoto.bytes.length}');
     if (state is! ReporterCameraState) return;
 
-    final locationData = await _getLocation();
-
     final report = Report(
-      photo: event.reportPhoto,
-      coordinates: Coordinates(
-          longitude: locationData.longitude ?? double.nan,
-          latitude: locationData.latitude ?? double.nan),
-    );
+        photo: event.reportPhoto, coordinates: await _location.coordinates);
+    logger.info('report: ${report.toString()}');
 
     emit(ReporterCameraState()..imageProcessingInProgress = false);
     logger.info('<_onPhotoPrepared> Emitted state: $state');
@@ -73,6 +72,7 @@ class ReporterBloc extends Bloc<ReporterEvent, ReporterState> {
 
     final report = (state as ReporterReportState).report;
     emit(ReporterReportState(report: report)..reportSendingInProgress = true);
+    await Future.delayed(const Duration(seconds: 3));
     logger.info('<_onSendReportButtonPressed> Emitted state: $state');
 
     final response = await RemoteAPI().postReport(report);
@@ -99,32 +99,5 @@ class ReporterBloc extends Bloc<ReporterEvent, ReporterState> {
 
     emit(ReporterCameraState());
     logger.info('<_onCancelReportButtonPressed> Emitted state: $state');
-  }
-
-  Future<LocationData> _getLocation() async {
-    bool locationServiceEnabled = await _location.serviceEnabled();
-    bool locationPermissionGranted =
-        await _location.hasPermission() == PermissionStatus.granted;
-
-    if (locationServiceEnabled && locationPermissionGranted) {
-      return await _location.getLocation();
-    }
-
-    locationServiceEnabled = await _location.requestService();
-    if (!locationServiceEnabled) {
-      return LocationData.fromMap({});
-    }
-
-    if (locationPermissionGranted) {
-      return await _location.getLocation();
-    }
-
-    locationPermissionGranted =
-        await _location.requestPermission() == PermissionStatus.granted;
-    if (locationPermissionGranted) {
-      return await _location.getLocation();
-    }
-
-    return LocationData.fromMap({});
   }
 }

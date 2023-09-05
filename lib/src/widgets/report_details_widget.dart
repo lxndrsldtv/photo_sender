@@ -9,16 +9,16 @@ import '../blocs/reporter_states.dart';
 import '../settings.dart';
 
 class ReportDetailsWidget extends StatelessWidget {
-  ReportDetailsWidget({super.key, required this.state});
+  const ReportDetailsWidget({super.key, required this.bloc});
 
-  final ReporterReportState state;
-  final logger = Logger('ReportDetails');
+  final ReporterBloc bloc;
 
   @override
   Widget build(BuildContext context) {
+    final logger = Logger('ReportDetailsWidget');
+    logger.info('build start');
     final screenSize = MediaQuery.of(context).size;
-    final reporterBloc = BlocProvider.of<ReporterBloc>(context);
-
+    final state = bloc.state as ReporterReportState;
     final image = state.report.photo.encoded;
 
     return BlocListener<ReporterBloc, ReporterState>(
@@ -62,8 +62,8 @@ class ReportDetailsWidget extends StatelessWidget {
                             'Comment to photo',
                         hintStyle: Theme.of(context).textTheme.headlineSmall,
                       ),
-                      onChanged: (text) => reporterBloc
-                          .add(ReportCommentTextChanged(commentText: text)),
+                      onChanged: (text) =>
+                          bloc.add(ReportCommentTextChanged(commentText: text)),
                     ),
                   ),
                   Container(
@@ -75,7 +75,7 @@ class ReportDetailsWidget extends StatelessWidget {
                           width: screenSize.width / 3,
                           child: ElevatedButton(
                             onPressed: () =>
-                                reporterBloc.add(CancelReportButtonPressed()),
+                                bloc.add(CancelReportButtonPressed()),
                             child: Text(
                               AppLocalizations.of(context)?.btnCancel_Label ??
                                   'Cancel',
@@ -87,7 +87,7 @@ class ReportDetailsWidget extends StatelessWidget {
                           width: screenSize.width / 3,
                           child: ElevatedButton(
                             onPressed: () {
-                              reporterBloc.add(SendReportButtonPressed());
+                              bloc.add(SendReportButtonPressed());
                             },
                             child: Text(
                               AppLocalizations.of(context)?.btnSend_Label ??

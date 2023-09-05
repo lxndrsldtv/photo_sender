@@ -26,22 +26,11 @@ class ReporterWidget extends StatelessWidget {
         child: BlocBuilder<ReporterBloc, ReporterState>(
           builder: (context, state) {
             logger.info(state);
-            logger.info(state.toString());
 
-            return Stack(
-              children: [
-                Visibility(
-                  visible: state.cameraVisibility,
-                  child: const CameraWidget(),
-                ),
-                Visibility(
-                  visible: state.reportVisibility,
-                  child: state is ReporterReportState
-                      ? ReportDetailsWidget(state: state)
-                      : const Placeholder(),
-                ),
-              ],
-            );
+            return state is ReporterCameraState
+                ? CameraWidget(bloc: BlocProvider.of<ReporterBloc>(context))
+                : ReportDetailsWidget(
+                    bloc: BlocProvider.of<ReporterBloc>(context));
           },
         ),
       ),

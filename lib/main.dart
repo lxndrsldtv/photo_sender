@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_texts.dart';
 import 'package:logging/logging.dart';
-import 'package:photo_sender/src/blocs/reporter_bloc.dart';
-import 'package:photo_sender/src/widgets/reporter_widget.dart';
+
+import './src/blocs/reporter_bloc.dart';
+import './src/services/location_service.dart';
+import './src/widgets/reporter_widget.dart';
 
 void main() async {
   Logger.root.level = Level.SHOUT;
@@ -24,7 +26,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ReporterBloc>(
-          create: (_) => ReporterBloc(),
+          create: (_) => ReporterBloc(location: LocationServiceImpl()),
         ),
       ],
       child: MaterialApp(
@@ -37,7 +39,10 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           textTheme: const TextTheme().copyWith(
             headlineMedium: const TextStyle(color: Colors.white),
-            headlineSmall: const TextStyle(color: Colors.black26, fontSize: 14, fontStyle: FontStyle.italic),
+            headlineSmall: const TextStyle(
+                color: Colors.black26,
+                fontSize: 14,
+                fontStyle: FontStyle.italic),
           ),
         ),
         home: const ReporterWidget(),

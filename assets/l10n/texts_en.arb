@@ -4,6 +4,6 @@
     "noteTextField_HintText": "Comment to photo",
     "btnSend_Label": "Send",
     "btnCancel_Label": "Cancel",
-    "txtSending": "Sending...",
+    "txtSending": "Sending photo...",
     "txtCameraPermissionDenied": "Permission to use camera not granted"
 }

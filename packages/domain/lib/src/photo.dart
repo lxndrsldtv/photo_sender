@@ -6,7 +6,7 @@ class Photo {
   final String fileName;
   final Uint8List bytes;
   Uint8List? _encoded;
-  bool _isEmpty;
+  final bool _isEmpty;
 
   Photo({required this.fileName, required this.bytes}) : _isEmpty = false;
 

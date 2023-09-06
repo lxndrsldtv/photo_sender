@@ -1,39 +1,44 @@
 import 'dart:developer';
 
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_texts.dart';
 import 'package:logging/logging.dart';
-import 'package:photo_sender/src/repositories/report_repository_impl.dart';
+import 'package:photo_sender/src/blocs/reporter_bloc.dart';
+import 'package:photo_sender/src/blocs/reporter_events.dart';
+import 'package:photo_sender/src/blocs/reporter_states.dart';
+import 'package:photo_sender/src/widgets/report_details_widget.dart';
 
-import './src/blocs/reporter_bloc.dart';
-import './src/services/location_service.dart';
-import './src/widgets/reporter_widget.dart';
+import 'fake_reporter_bloc_impl.dart';
 
-void main() async {
-  Logger.root.level = Level.SHOUT;
+Future<void> main() async {
+  Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
     log('${record.level.name}: ${record.loggerName}: ${record.message}');
   });
 
-  runApp(const MyApp());
+  final reporterBloc = FakeReporterBlocImpl()..sendingResultSuccess = false;
+  reporterBloc.add(PhotoPrepared(reportPhoto: Photo.empty()));
+  await Future.delayed(const Duration(seconds: 1));
+
+  runApp(ReportDetailsScreenDemo(bloc: reporterBloc));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ReportDetailsScreenDemo extends StatelessWidget {
+  const ReportDetailsScreenDemo({super.key, required this.bloc});
+
+  final ReporterBloc bloc;
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ReporterBloc>(
-          create: (_) => ReporterBlocImpl(
-              location: LocationServiceImpl(),
-              reportRepository: ReportRepositoryImpl()),
+          create: (_) => bloc,
         ),
       ],
       child: MaterialApp(
-        title: 'Photo Sender',
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         // locale: const Locale('ru'),
@@ -48,7 +53,17 @@ class MyApp extends StatelessWidget {
                 fontStyle: FontStyle.italic),
           ),
         ),
-        home: const ReporterWidget(),
+
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Report Details Demo'),
+          ),
+          body: BlocBuilder<ReporterBloc, ReporterState>(
+            builder: (_, state) => ReportDetailsWidget(
+              bloc: bloc,
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -34,6 +34,6 @@ class ReporterReportState extends ReporterState {
       '<ReporterReportState> cameraVisibility: $cameraVisibility, '
       'reportVisibility: $reportVisibility, '
       'reportSendingInProgress: $reportSendingInProgress, '
-      'sendingErrorText: $reportSendingErrorText'
+      'sendingErrorText: $reportSendingErrorText, '
       'report = ${report.toString()}';
 }

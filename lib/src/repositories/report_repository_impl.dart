@@ -1,10 +1,13 @@
 import 'package:domain/domain.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
-import './settings.dart';
+import 'package:photo_sender/src/repositories/command_result.dart';
+import 'package:photo_sender/src/repositories/report_repository.dart';
 
-class RemoteAPI {
-  final logger = Logger('RemoteAPI');
+import '../settings.dart';
+
+class ReportRepositoryImpl implements ReportRepository {
+  final logger = Logger('ReportRepositoryImpl');
 
   // curl
   // -H "Content-Type: application/javascript"
@@ -15,15 +18,14 @@ class RemoteAPI {
   // -F photo=@test.png
   // curl -H "Content-Type: application/javascript" -X POST https://flutter-sandbox.free.beeceptor.com/upload_photo/ -F comment="tst" -F latitude=0.0 -F longitude=0.0 -F photo=@tst.png
 
-  Future<http.Response> postReport(Report report) async {
+  Future<http.Response> _postReport(Report report) async {
     final request = http.MultipartRequest(
         'POST', Uri.parse(Settings.baseURL + Settings.uploadPhotoEndPoint))
-    ..headers['Content-Type'] = Settings.contentType
-    ..fields['comment'] = report.comment
-    ..fields['latitude'] = report.coordinates.latitude.toString()
-    ..fields['longitude'] = report.coordinates.longitude.toString()
-    ..files
-        .add(http.MultipartFile.fromBytes('photo', report.photo.bytes));
+      ..headers['Content-Type'] = Settings.contentType
+      ..fields['comment'] = report.comment
+      ..fields['latitude'] = report.coordinates.latitude.toString()
+      ..fields['longitude'] = report.coordinates.longitude.toString()
+      ..files.add(http.MultipartFile.fromBytes('photo', report.photo.bytes));
 
     logger.info('URL: request.url');
 
@@ -36,5 +38,16 @@ class RemoteAPI {
     });
 
     return http.Response.fromStream(await request.send());
+  }
+
+  @override
+  Future<CommandResult> add({required Report report}) async {
+    final result = await _postReport(report);
+    return CommandResult(
+      code: result.statusCode == 201
+          ? CommandResultCode.success
+          : CommandResultCode.fail,
+      description: result.body,
+    );
   }
 }

@@ -1,20 +1,26 @@
 import 'package:domain/domain.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
+import 'package:photo_sender/src/repositories/command_result.dart';
 
 import './reporter_events.dart';
 import './reporter_states.dart';
-import '../remote_api.dart';
+import '../repositories/report_repository.dart';
 import '../services/location_service.dart';
 
 class ReporterBloc extends Bloc<ReporterEvent, ReporterState> {
+  ReporterBloc(super.initialState);
+}
+
+class ReporterBlocImpl extends ReporterBloc {
   final logger = Logger('ReporterBloc');
 
-  // final _location = Location();
   final LocationService _location;
+  final ReportRepository _reportRepository;
 
-  ReporterBloc({required location})
+  ReporterBlocImpl({required location, required reportRepository})
       : _location = location,
+        _reportRepository = reportRepository,
         super(ReporterCameraState()) {
     on<ImageProcessingInProgress>(_onImageProcessingInProgress);
     on<PhotoPrepared>(_onPhotoPrepared);
@@ -60,7 +66,7 @@ class ReporterBloc extends Bloc<ReporterEvent, ReporterState> {
     logger.info('<_onReportCommentTextChanged> Current state: $state');
 
     (state as ReporterReportState).report.comment = event.commentText;
-    // logger.info('<_onReportCommentTextChanged> Emitted state: $state');
+    logger.info('<_onReportCommentTextChanged> New state: $state');
   }
 
   _onSendReportButtonPressed(
@@ -75,15 +81,12 @@ class ReporterBloc extends Bloc<ReporterEvent, ReporterState> {
     await Future.delayed(const Duration(seconds: 3));
     logger.info('<_onSendReportButtonPressed> Emitted state: $state');
 
-    final response = await RemoteAPI().postReport(report);
-    final responseStatusCode = response.statusCode;
-    logger.info(
-        '<_onSendReportButtonPressed> response.statusCode: $responseStatusCode');
+    final result = await _reportRepository.add(report: report);
+    logger.info('<_onSendReportButtonPressed> result.code: ${result.code}');
 
-    final sendingIsNotSuccess = responseStatusCode != 201;
-    if (sendingIsNotSuccess) {
+    if (result.code == CommandResultCode.fail) {
       emit(ReporterReportState(report: report)
-        ..reportSendingErrorText = response.body);
+        ..reportSendingErrorText = result.description);
     } else {
       emit(ReporterCameraState());
     }

@@ -38,6 +38,7 @@ class ReportDetailsWidget extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(8.0),
+            color: Colors.black,
             child: Card(
               color: Colors.white70,
               child: Column(
@@ -45,7 +46,7 @@ class ReportDetailsWidget extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Container(
-                      margin: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+                      margin: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
                       child: image != null
                           ? Image.memory(image)
                           : const Placeholder(),
@@ -111,7 +112,8 @@ class ReportDetailsWidget extends StatelessWidget {
               color: Colors.black54,
               child: Center(
                 child: Text(
-                  AppLocalizations.of(context)?.txtSending ?? 'Sending...',
+                  AppLocalizations.of(context)?.txtSending ??
+                      'Sending photo...',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),

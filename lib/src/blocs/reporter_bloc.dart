@@ -77,10 +77,9 @@ class ReporterBlocImpl extends ReporterBloc {
     if (state is! ReporterReportState) return;
 
     final report = (state as ReporterReportState).report;
-    emit(ReporterReportState(report: report)..reportSendingInProgress = true);
-    await Future.delayed(const Duration(seconds: 3));
-    logger.info('<_onSendReportButtonPressed> Emitted state: $state');
 
+    emit(ReporterReportState(report: report)..reportSendingInProgress = true);
+    logger.info('<_onSendReportButtonPressed> Emitted state: $state');
     final result = await _reportRepository.add(report: report);
     logger.info('<_onSendReportButtonPressed> result.code: ${result.code}');
 

@@ -16,11 +16,11 @@ void main() async {
     log('${record.level.name}: ${record.loggerName}: ${record.message}');
   });
 
-  runApp(const MyApp());
+  runApp(const PhotoSender());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class PhotoSender extends StatelessWidget {
+  const PhotoSender({super.key});
 
   @override
   Widget build(BuildContext context) {

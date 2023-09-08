@@ -121,13 +121,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
-  cup_of_tea:
-    dependency: "direct main"
-    description:
-      path: "packages/cup_of_tea"
-      relative: true
-    source: path
-    version: "0.0.1"
   cupertino_icons:
     dependency: "direct main"
     description:

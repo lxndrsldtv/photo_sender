@@ -2,8 +2,40 @@
 <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
   <defs>
     <bx:grid x="0" y="0" width="200" height="200"/>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="366.945" y1="216.789" x2="366.945" y2="274.276" id="gradient-1" gradientTransform="matrix(0.349151, 1.702237, -0.882237, 0.190492, 147.784546, -539.139038)">
+      <stop offset="0" style="stop-color: rgba(25, 5, 246, 1)"/>
+      <stop offset="1" style="stop-color: rgba(15, 3, 146, 1)"/>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="275.056" y1="233.925" x2="275.056" y2="290.917" id="gradient-3" gradientTransform="matrix(1.74706, 0, 0, 1.754632, -430.538025, -410.452759)">
+      <stop offset="0" style="stop-color: rgba(249, 5, 5, 1)"/>
+      <stop offset="1" style="stop-color: rgba(149, 3, 3, 1)"/>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="350" y1="200" x2="350" y2="300" id="gradient-4" gradientTransform="matrix(1, 0, 0, 1, -200, -200)">
+      <stop offset="0" style="stop-color: rgba(246, 246, 5, 1)"/>
+      <stop offset="1" style="stop-color: rgba(146, 146, 3, 1)"/>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="350" y1="300" x2="350" y2="400" id="gradient-0" gradientTransform="matrix(1, 0, 0, 1, -200, -200)">
+      <stop offset="0" style="stop-color: rgba(163, 4, 216, 1)"/>
+      <stop offset="1" style="stop-color: rgba(87, 2, 116, 1)"/>
+    </linearGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="272.625" cy="270.894" r="50" id="gradient-2" gradientTransform="matrix(1, 0, 0, 1, 0.000011, -0.000011)">
+      <stop offset="0" style="stop-color: rgba(11, 189, 11, 1)"/>
+      <stop offset="1" style="stop-color: rgba(5, 93, 5, 1)"/>
+    </radialGradient>
   </defs>
-  <rect width="200" height="200" style="stroke: rgb(0, 0, 0); fill: rgb(8, 20, 241);"/>
-  <ellipse style="paint-order: fill; stroke: rgb(51, 6, 250); fill: rgb(241, 233, 9);" cx="100" cy="100" rx="100" ry="100"/>
-  <path d="M 100 0 L 200 200 L 0 200 L 100 0 Z" style="stroke: rgb(0, 0, 0); fill: rgb(238, 8, 8);" bx:shape="triangle 0 0 200 200 0.5 0 1@a07d81fd"/>
+  <path style="stroke: rgb(0, 0, 0); stroke-width: 0px; fill-rule: nonzero; fill: url('#gradient-0');" d="M 100 100 H 200 V 175 A 25 25 0 0 1 175 200 H 100 V 100 Z" bx:shape="rect 100 100 100 100 0 0 25 0 1@d4c4ab7d">
+    <title>R1</title>
+  </path>
+  <path style="stroke: rgb(0, 0, 0); stroke-width: 0px; fill: url('#gradient-1');" d="M 0 100 H 100 V 200 H 25 A 25 25 0 0 1 0 175 V 100 Z" bx:shape="rect 0 100 100 100 0 0 0 25 1@4341b68b">
+    <title>R3</title>
+  </path>
+  <path style="stroke: rgb(0, 0, 0); stroke-width: 0px; fill-rule: nonzero; fill: url('#gradient-3');" d="M 25 0 H 100 V 100 H 0 V 25 A 25 25 0 0 1 25 0 Z" bx:shape="rect 0 0 100 100 25 0 0 0 1@5d3b620e">
+    <title>R1</title>
+  </path>
+  <path style="stroke: rgb(0, 0, 0); stroke-width: 0px; fill: url('#gradient-4');" d="M 100 0 H 175 A 25 25 0 0 1 200 25 V 100 H 100 V 0 Z" bx:shape="rect 100 0 100 100 0 25 0 0 1@f21c3fcf">
+    <title>R3</title>
+  </path>
+  <rect style="stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-width: 0px; fill: url('#gradient-2'); transform-box: fill-box; transform-origin: 50% 50%; fill-opacity: 0.75;" transform="matrix(0.707107, -0.707107, 0.707107, 0.707107, -171.914295, -170.183294)" x="222.625" y="220.894" width="100" height="100" rx="25" ry="25">
+    <title>R2</title>
+  </rect>
 </svg>

@@ -12,13 +12,13 @@ class ReporterBloc extends Bloc<ReporterEvent, ReporterState> {
   ReporterBloc(super.initialState);
 }
 
-class ReporterBlocImpl extends ReporterBloc {
+class AppReporterBloc extends ReporterBloc {
   final logger = Logger('ReporterBloc');
 
   final LocationService _location;
   final ReportRepository _reportRepository;
 
-  ReporterBlocImpl({required location, required reportRepository})
+  AppReporterBloc({required location, required reportRepository})
       : _location = location,
         _reportRepository = reportRepository,
         super(ReporterCameraState()) {

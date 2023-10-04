@@ -10,7 +10,7 @@ import 'package:photo_sender/src/blocs/reporter_events.dart';
 import 'package:photo_sender/src/blocs/reporter_states.dart';
 import 'package:photo_sender/src/widgets/report_details_widget.dart';
 
-import 'fake_reporter_bloc_impl.dart';
+import 'fake_reporter_bloc.dart';
 
 Future<void> main() async {
   Logger.root.level = Level.ALL;
@@ -18,7 +18,7 @@ Future<void> main() async {
     log('${record.level.name}: ${record.loggerName}: ${record.message}');
   });
 
-  final reporterBloc = FakeReporterBlocImpl()..sendingResultSuccess = false;
+  final reporterBloc = FakeReporterBloc()..sendingResultSuccess = false;
   reporterBloc.add(PhotoPrepared(reportPhoto: Photo.empty()));
   await Future.delayed(const Duration(seconds: 1));
 

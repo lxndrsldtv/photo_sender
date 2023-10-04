@@ -4,10 +4,10 @@ import 'package:photo_sender/src/blocs/reporter_bloc.dart';
 import 'package:photo_sender/src/blocs/reporter_events.dart';
 import 'package:photo_sender/src/blocs/reporter_states.dart';
 
-class FakeReporterBlocImpl extends ReporterBloc {
+class FakeReporterBloc extends ReporterBloc {
   bool sendingResultSuccess = true;
 
-  FakeReporterBlocImpl() : super(ReporterCameraState()) {
+  FakeReporterBloc() : super(ReporterCameraState()) {
     on<ImageProcessingInProgress>(_onImageProcessingInProgress);
     on<PhotoPrepared>(_onPhotoPrepared);
     on<ReportCommentTextChanged>(_onReportCommentTextChanged);

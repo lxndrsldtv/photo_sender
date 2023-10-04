@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_texts.dart';
 import 'package:logging/logging.dart';
-import 'package:photo_sender/src/repositories/report_repository_impl.dart';
+import 'package:photo_sender/src/repositories/http_report_repository.dart';
 
 import './src/blocs/reporter_bloc.dart';
 import './src/services/location_service.dart';
@@ -27,9 +27,9 @@ class PhotoSender extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ReporterBloc>(
-          create: (_) => ReporterBlocImpl(
-              location: LocationServiceImpl(),
-              reportRepository: ReportRepositoryImpl()),
+          create: (_) => AppReporterBloc(
+              location: PlatformLocationService(),
+              reportRepository: HttpReportRepository()),
         ),
       ],
       child: MaterialApp(

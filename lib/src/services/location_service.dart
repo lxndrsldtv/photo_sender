@@ -5,7 +5,7 @@ abstract class LocationService {
   Future<Coordinates> get coordinates;
 }
 
-class LocationServiceImpl implements LocationService {
+class PlatformLocationService implements LocationService {
   final _location = Location();
 
   @override

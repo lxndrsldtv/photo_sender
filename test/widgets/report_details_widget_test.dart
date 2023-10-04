@@ -8,13 +8,13 @@ import 'package:photo_sender/src/blocs/reporter_events.dart';
 import 'package:photo_sender/src/blocs/reporter_states.dart';
 import 'package:photo_sender/src/widgets/report_details_widget.dart';
 
-import 'fake_reporter_bloc_impl.dart';
+import 'fake_reporter_bloc.dart';
 
 void main() {
   group('ReportDetailsWidget tests', () {
     Future<void> init(WidgetTester tester) async {
       // instantiate fake bloc, set it to imitate error of sending report
-      final reporterBloc = FakeReporterBlocImpl()..sendingResultSuccess = false;
+      final reporterBloc = FakeReporterBloc()..sendingResultSuccess = false;
       // initialise bloc, imitate changing state from camera to report
       reporterBloc.add(PhotoPrepared(reportPhoto: Photo.empty()));
 

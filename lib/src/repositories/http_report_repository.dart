@@ -6,8 +6,8 @@ import 'package:photo_sender/src/repositories/report_repository.dart';
 
 import '../settings.dart';
 
-class ReportRepositoryImpl implements ReportRepository {
-  final logger = Logger('ReportRepositoryImpl');
+class HttpReportRepository implements ReportRepository {
+  final logger = Logger('HttpReportRepository');
 
   // curl
   // -H "Content-Type: application/javascript"

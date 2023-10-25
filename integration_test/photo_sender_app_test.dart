@@ -28,6 +28,14 @@ void main() {
 
       // print('Tap Cancel button in 3 seconds');
       await Future.delayed(const Duration(seconds: 3));
+      expect(find.text('This is note to photo'), findsNothing);
+      await tester.enterText(
+        find.byKey(const ValueKey<String>('ReportDetailsTextFieldKey')),
+        'This is note to photo',
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('This is note to photo'), findsOneWidget);
+      await Future.delayed(const Duration(seconds: 3));
       await tester.tap(find.text('Cancel'));
       await tester.pumpAndSettle();
 

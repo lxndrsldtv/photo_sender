@@ -55,6 +55,7 @@ class ReportDetailsWidget extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.all(8.0),
                     child: TextField(
+                      key: const ValueKey<String>('ReportDetailsTextFieldKey'),
                       maxLength: Settings.noteMaxLength,
                       maxLines: Settings.noteMaxLines,
                       decoration: InputDecoration(
